@@ -17,16 +17,38 @@ var PostSchema = mongoose.Schema({
 var PostModel = mongoose.model("PostModel", PostSchema);
 
 app.post("/api/blogpost", createPost);
+app.get("/api/blogpost", getAllPosts);
+
+
+function getAllPosts(req,res){
+    PostModel
+            .find()
+            .then(
+                 function(posts){
+                       res.json(posts);
+                 },
+                 function(err){
+                    res.sendStatus(400);
+                 }
+
+            );
+
+}
 
 function createPost(req,res){
     var post = req.body;
     console.log(post);  
-    PostModel.create(post);
-    res.json(post);
+    PostModel.create(post)
+              .then(
+                    function (postObj){
+                       res.json(200);
+                    },
+                    function(error){
+                       res.sendStatus(400);  
+                    }
+              );
+    //res.json(post); 
 } 
-
-
-
 
 app.listen(7000);
 
